@@ -1,4 +1,93 @@
-import { AppRegistry } from 'react-native';
-import App from './App';
+import React, { Component } from 'react';
+import { AppRegistry, View, Text, Button, StyleSheet } from 'react-native';
 
-AppRegistry.registerComponent('app3', () => App);
+import Topo from './src/components/topo';
+import Icone from './src/components/icone';
+
+const styles = StyleSheet.create({
+	principal: {paddingVertical: 0},
+	painelAcoes: {
+		marginTop: 10,
+		paddingHorizontal: 10,
+		flexDirection: 'row',
+		justifyContent: 'space-between'
+	},
+	btnEscolha: {width: 90},
+	palco: {
+		alignItems: 'center',
+		marginTop: 10
+	},
+	resultado: {
+		fontSize: 25,
+		fontWeight: 'bold',
+		color: 'red',
+		height: 45
+	},
+});
+
+class app3 extends Component {
+
+	constructor(props) {
+		super(props);
+		this.state = { 
+			escolhaUsuario: '', 
+			escolhaComputador: '',
+			resultado: ''
+		};
+	}
+
+	jokenpo(escolhaUsuario) {
+		const rand = Math.floor(Math.random() * 3);
+		const escolhas = ['pedra','papel','tesoura'];
+		let resultado;
+
+		if (rand == 0) {
+			//pedra
+			if (escolhaUsuario === 'pedra') resultado = 'Empate';
+			else if (escolhaUsuario === 'papel') resultado = 'Você ganhou';
+			else resultado = 'Você perdeu';
+		} else if (rand == 1) {
+			//papel
+			if (escolhaUsuario === 'pedra') resultado = 'Você perdeu';
+			else if (escolhaUsuario === 'papel') resultado = 'Empate';
+			else resultado = 'Você ganhou';
+		} else if (rand == 2) {
+			//tesoura
+			if (escolhaUsuario === 'pedra') resultado = 'Você ganhou';
+			else if (escolhaUsuario === 'papel') resultado = 'Você perdeu';
+			else resultado = 'Empate';
+		}
+
+		this.setState({
+			escolhaUsuario: escolhaUsuario, 
+			escolhaComputador: escolhas[rand],
+			resultado: resultado
+		});
+	}
+
+	render() {
+		return (
+			<View style={styles.principal}>
+				<Topo/>
+				<View style={styles.painelAcoes}>
+					<View style={styles.btnEscolha}>
+						<Button title="pedra" onPress={() => { this.jokenpo('pedra'); }}/>
+					</View>
+					<View style={styles.btnEscolha}>
+						<Button title="papel" onPress={() => { this.jokenpo('papel'); }}/>
+					</View>
+					<View style={styles.btnEscolha}>
+						<Button title="tesoura" onPress={() => { this.jokenpo('tesoura'); }}/>
+					</View>
+				</View>
+				<View style={styles.palco}>
+					<Text style={styles.resultado}>{ this.state.resultado }</Text>
+					<Icone escolha={this.state.escolhaComputador} jogador="computador"/>
+					<Icone escolha={this.state.escolhaUsuario} jogador="usuario"/>
+				</View>
+			</View>
+		);
+	}
+}
+
+AppRegistry.registerComponent('app3', () => app3);
